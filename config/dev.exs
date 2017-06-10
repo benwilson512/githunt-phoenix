@@ -40,7 +40,6 @@ config :phoenix, :stacktrace_depth, 20
 config :githunt_phoenix, GitHunt.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "postgres",
   database: "githunt_phoenix_dev",
   hostname: "localhost",
   pool_size: 10
