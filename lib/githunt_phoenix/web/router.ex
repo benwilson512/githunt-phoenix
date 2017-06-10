@@ -9,5 +9,6 @@ defmodule GitHunt.Web.Router do
     schema: GitHunt.Web.Schema
 
   forward "/graphiql", Absinthe.Plug.GraphiQL,
-    schema: GitHunt.Web.Schema
+    schema: GitHunt.Web.Schema,
+    interface: :simple
 end

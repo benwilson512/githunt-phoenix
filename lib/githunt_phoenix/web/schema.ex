@@ -5,14 +5,10 @@ defmodule GitHunt.Web.Schema do
   import_types __MODULE__.GithubTypes
 
   @desc "A list of options for the sort order of the feed"
-  enum :feed_type do
-    values [:hot, :new, top]
-  end
+  enum :feed_type, values: [:hot, :new, :top]
 
   @desc "The type of vote to record, when submitting a vote"
-  enum :vote_type do
-    values [:up, :down, :cancel]
-  end
+  enum :vote_type, values: [:up, :down, :cancel]
 
   query do
     @desc "A feed of repository submissions"
