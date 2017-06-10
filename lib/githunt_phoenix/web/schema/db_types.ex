@@ -29,12 +29,12 @@ defmodule GitHunt.Web.Schema.DBTypes do
   object :entry do
     @desc "Information about the repository from GitHub"
     field :repository, non_null(:repository) do
-      resolve &Github.repository/3
+      # resolve &Github.repository/3
     end
 
     @desc "The GitHub user who submitted this entry"
     field :posted_by, non_null(:user) do
-      resolve &Github.user_by_login/3
+      # resolve &Github.user_by_login/3
     end
 
     @desc "A timestamp of when the entry was submitted"
@@ -51,7 +51,7 @@ defmodule GitHunt.Web.Schema.DBTypes do
       arg :limit, :integer
       arg :offset, :integer
 
-      resolve &Github.comments_by_repository/3
+      # resolve &Github.comments_by_repository/3
     end
 
     @desc "The number of comments posted about this repository"
