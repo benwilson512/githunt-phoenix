@@ -9,10 +9,14 @@ defmodule GitHunt.Web.Schema.DBTypes do
     field :id, non_null(:integer)
 
     @desc "The GitHub user who posted the comment"
-    field :posted_by, non_null(:user)
+    field :posted_by, non_null(:user) do
+      resolve &Github.user_by_login/3
+    end
 
     @desc "A timestamp of when the comment was posted"
-    field :created_at, non_null(:float) # Actually a date
+    field :created_at, non_null(:float) do
+      resolve &Github.created_at/3
+    end
 
     @desc "The text of the comment"
     field :content, non_null(:string)
@@ -28,13 +32,11 @@ defmodule GitHunt.Web.Schema.DBTypes do
   @desc "Information about a GitHub repository submitted to GitHunt"
   object :entry do
     @desc "Information about the repository from GitHub"
-    field :repository, non_null(:repository) do
-      # resolve &Github.repository/3
-    end
+    field :repository, non_null(:repository)
 
     @desc "The GitHub user who submitted this entry"
     field :posted_by, non_null(:user) do
-      # resolve &Github.user_by_login/3
+      resolve &Github.user_by_login/3
     end
 
     @desc "A timestamp of when the entry was submitted"

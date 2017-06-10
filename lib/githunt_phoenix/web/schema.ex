@@ -63,6 +63,8 @@ defmodule GitHunt.Web.Schema do
       arg :repo_full_name, non_null(:string)
       @desc "The text content for the new comment"
       arg :comment_content, non_null(:string)
+
+      resolve &Github.submit_comment/3
     end
   end
 
