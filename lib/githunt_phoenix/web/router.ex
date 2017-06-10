@@ -5,7 +5,9 @@ defmodule GitHunt.Web.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", GitHunt.Web do
-    pipe_through :api
-  end
+  forward "/graphql", Absinthe.Plug,
+    schema: GitHunt.Web.Schema
+
+  forward "/graphiql", Absinthe.Plug.GraphiQL,
+    schema: GitHunt.Web.Schema
 end
