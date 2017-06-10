@@ -1,6 +1,8 @@
 defmodule GitHunt.Web.Schema.DBTypes do
   use Absinthe.Schema.Notation
 
+  alias GitHunt.Github
+
   @desc "A comment about an entry, submitted by a user"
   object :comment do
     @desc "The SQL ID of this entry"
@@ -26,10 +28,14 @@ defmodule GitHunt.Web.Schema.DBTypes do
   @desc "Information about a GitHub repository submitted to GitHunt"
   object :entry do
     @desc "Information about the repository from GitHub"
-    field :repository, non_null(:repository)
+    field :repository, non_null(:repository) do
+      resolve &Github.repository/3
+    end
 
     @desc "The GitHub user who submitted this entry"
-    field :posted_by, non_null(:user)
+    field :posted_by, non_null(:user) do
+      resolve &Github.user_by_login/3
+    end
 
     @desc "A timestamp of when the entry was submitted"
     field :created_at, non_null(:float) # Actually a date
@@ -44,6 +50,8 @@ defmodule GitHunt.Web.Schema.DBTypes do
     field :comments, list_of(:comment) do
       arg :limit, :integer
       arg :offset, :integer
+
+      resolve &Github.comments_by_repository/3
     end
 
     @desc "The number of comments posted about this repository"

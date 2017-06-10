@@ -4,6 +4,8 @@ defmodule GitHunt.Web.Schema do
   import_types __MODULE__.DBTypes
   import_types __MODULE__.GithubTypes
 
+  alias GitHunt.Github
+
   @desc "A list of options for the sort order of the feed"
   enum :feed_type, values: [:hot, :new, :top]
 
@@ -23,13 +25,21 @@ defmodule GitHunt.Web.Schema do
 
     @desc "A single entry"
     field :entry, :entry do
-      arg :repo_full_name, non_null(:string)
       @desc ~s(The full repository name from GitHub, e.g. "apollostack/GitHunt-API")
+      arg :repo_full_name, non_null(:string)
+
+      resolve &Github.repo_by_name/3
     end
 
     @desc "Return the currently logged in user, or null if nobody is logged in"
     field :current_user, :user do
-
+      resolve fn _, _ ->
+        user = %{
+          login: "benwilson512",
+          avatar_url: "https://avatars2.githubusercontent.com/u/247817?v=3",
+        }
+        {:ok, user}
+      end
     end
   end
 
