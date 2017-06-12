@@ -5,6 +5,15 @@ defmodule GitHunt.Web.UserSocket do
   transport :websocket, Phoenix.Transports.WebSocket
 
   def connect(_params, socket) do
+    opts = [
+      context: %{},
+      jump_phases: false,
+    ]
+
+    socket =
+      socket
+      |> assign(:absinthe, %{schema_mod: GitHunt.Web.Schema, opts: opts})
+
     {:ok, socket}
   end
 

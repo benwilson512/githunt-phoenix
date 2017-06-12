@@ -73,6 +73,10 @@ defmodule GitHunt.Web.Schema do
     field :comment_added, :comment do
       @desc ~s(The full repository name from GitHub, e.g. "apollostack/GitHunt-API")
       arg :repo_full_name, non_null(:string)
+
+      topic fn args ->
+        args.repo_full_name
+      end
     end
   end
 end

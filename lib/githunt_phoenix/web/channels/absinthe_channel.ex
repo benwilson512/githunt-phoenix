@@ -6,22 +6,6 @@ defmodule Absinthe.Phoenix.Channel do
     {:ok, socket}
   end
 
-  def handle_in("subscribe", %{"topic" => topic}, socket) do
-    # probably doesn't belong here.
-    # socket.endpoint.subscribe(topic)
-    #
-    # # :ok = Phoenix.PubSub.subscribe(socket.pubsub_server, topic, [
-    # #   fastlane: {socket.transport_pid, socket.serializer, []},
-    # #   link: true,
-    # # ])
-    #
-    # pid = self()
-    # for field_key <- field_keys(doc) do
-    #   Absinthe.Subscriptions.Manager.subscribe(Chat.Endpoint, field_key, topic, doc, pid)
-    # end
-
-  end
-
   def handle_in("doc", %{"query" => query, "variables" => variables}, socket) do
     config = socket.assigns[:absinthe]
 
@@ -59,6 +43,18 @@ defmodule Absinthe.Phoenix.Channel do
     hash = :erlang.phash2({query, config})
     topic = "__absinthe__:#{hash}"
 
+    socket.endpoint.subscribe(topic)
+
+    # :ok = Phoenix.PubSub.subscribe(socket.pubsub_server, topic, [
+    #   fastlane: {socket.transport_pid, socket.serializer, []},
+    #   link: true,
+    # ])
+
+    pid = self()
+    for field_key <- field_keys(doc) do
+      Absinthe.Subscriptions.Manager.subscribe(GitHunt.Web.Endpoint, field_key, topic, doc, pid)
+    end
+
     {:reply, {:ok, %{ref: topic}}, socket}
   end
   defp execute(_, doc, _query, config, socket) do
@@ -70,7 +66,7 @@ defmodule Absinthe.Phoenix.Channel do
   defp field_keys(doc) do
     doc
     |> Absinthe.Blueprint.current_operation
-    |> Map.fetch!(:fields)
+    |> Map.fetch!(:selections)
     |> Enum.map(fn %{schema_node: schema_node, argument_data: argument_data} ->
       name = schema_node.__reference__.identifier
       key = schema_node.topic.(argument_data)
@@ -89,13 +85,12 @@ defmodule Absinthe.Phoenix.Channel do
   def preparation_pipeline(config) do
     config.schema_mod
     |> Absinthe.Pipeline.for_document(config.opts)
-    |> Absinthe.Pipeline.upto(Absinthe.Phase.Document.Flatten)
+    |> Absinthe.Pipeline.before(Absinthe.Phase.Document.Execution.Resolution)
   end
 
   def finalization_pipeline(config) do
-    [
-      {Absinthe.Phase.Document.Execution.Resolution, config.opts},
-      Absinthe.Phase.Document.Result,
-    ]
+    config.schema_mod
+    |> Absinthe.Pipeline.for_document(config.opts)
+    |> Absinthe.Pipeline.from(Absinthe.Phase.Document.Execution.Resolution)
   end
 end
