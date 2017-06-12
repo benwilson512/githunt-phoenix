@@ -1,6 +1,8 @@
 defmodule GitHunt.Web.Schema do
   use Absinthe.Schema
 
+  def pubsub, do: GitHunt.Web.Endpoint
+
   import_types __MODULE__.DBTypes
   import_types __MODULE__.GithubTypes
 
@@ -76,6 +78,16 @@ defmodule GitHunt.Web.Schema do
 
       topic fn args ->
         args.repo_full_name
+      end
+
+      trigger :submit_comment, topic: fn comment ->
+        comment.repository_name
+      end
+
+      resolve fn %{comment_added: comment}, _, _ ->
+        comment |> IO.inspect
+        IO.puts "executing doc"
+        {:ok, comment}
       end
     end
   end

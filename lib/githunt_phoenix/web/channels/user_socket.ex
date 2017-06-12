@@ -6,13 +6,16 @@ defmodule GitHunt.Web.UserSocket do
 
   def connect(_params, socket) do
     opts = [
-      context: %{},
+      context: %{pubsub: GitHunt.Web.Endpoint},
       jump_phases: false,
     ]
 
     socket =
       socket
-      |> assign(:absinthe, %{schema_mod: GitHunt.Web.Schema, opts: opts})
+      |> assign(:absinthe, %{
+        schema_mod: GitHunt.Web.Schema,
+        opts: opts,
+      })
 
     {:ok, socket}
   end

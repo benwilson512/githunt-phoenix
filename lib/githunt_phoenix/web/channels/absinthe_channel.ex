@@ -36,7 +36,7 @@ defmodule Absinthe.Phoenix.Channel do
   end
 
   defp classify(doc) do
-    Absinthe.Blueprint.current_operation(doc).schema_node.__reference__.identifier
+    Absinthe.Blueprint.current_operation(doc).schema_node.identifier
   end
 
   defp execute(:subscription, doc, query, config, socket) do
@@ -59,7 +59,6 @@ defmodule Absinthe.Phoenix.Channel do
   end
   defp execute(_, doc, _query, config, socket) do
     {:ok, result, _} = Absinthe.Pipeline.run(doc, finalization_pipeline(config))
-    result |> IO.inspect
     {:reply, {:ok, result}, socket}
   end
 
