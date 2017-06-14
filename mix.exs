@@ -37,6 +37,7 @@ defmodule GitHunt.Mixfile do
       {:cowboy, "~> 1.0"},
       {:absinthe, path: "~/src/absinthe", override: true},
       {:absinthe_plug, path: "~/src/absinthe_plug", override: true},
+      {:absinthe_phoenix, path: "~/src/absinthe_phoenix", override: true},
     ]
   end
 

@@ -85,10 +85,10 @@ defmodule GitHunt.Web.Schema do
       end
 
       resolve fn %{comment_added: comment}, _, _ ->
-        comment |> IO.inspect
-        IO.puts "executing doc"
+        IO.puts "EXECUTING"
         {:ok, comment}
       end
+
     end
   end
 end

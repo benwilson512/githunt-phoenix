@@ -7,7 +7,7 @@ defmodule GitHunt.Github do
     repo = __MODULE__.Entry
       |> Repo.get_by(repository_name: name)
 
-    comments = __MODULE__.Comment |> where(repository_name: ^name) |> Repo.all
+    comments = __MODULE__.Comment |> where(repository_name: ^name) |> order_by([desc: :created_at]) |> Repo.all
 
     repo = Map.merge(repo, %{
       comments: comments,
